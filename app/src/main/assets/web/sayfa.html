@@ -1,0 +1,621 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#12161D">
+<title>Konsol Çeviri</title>
+<style>
+  :root{--bg:#12161D;--card:#1C222C;--line:#2F3745;--accent:#FFD166;--text:#F1F3F5;--muted:#B7BEC9;--faint:#7D8592;--good:#4ADE80;--bad:#FF8FA3}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);font:16px/1.45 system-ui,-apple-system,sans-serif;padding:env(safe-area-inset-top) 14px 32px}
+  main{max-width:560px;margin:0 auto;padding-top:12px}
+  h1{font-size:22px;margin:2px 0;color:var(--accent)}
+  .status{display:flex;align-items:center;gap:10px;font-weight:700;font-size:16px;margin:8px 0 2px}
+  .dot{width:13px;height:13px;border-radius:50%;background:var(--faint);flex:none}
+  .dot.g{background:var(--good)}.dot.y{background:var(--accent)}.dot.r{background:#FF6384}
+  .detail{color:var(--muted);font-size:13.5px;min-height:1.3em;white-space:pre-line}
+  button{display:block;width:100%;padding:15px;border-radius:12px;border:0;background:var(--accent);color:var(--bg);font:700 17px system-ui,sans-serif;margin:12px 0 4px}
+  button:disabled{opacity:.75}
+  button.alt{background:var(--card);color:var(--text);border:1px solid var(--line);font-size:15px;padding:12px}
+  .screen{background:#0B0E13;border:1px solid var(--line);border-radius:14px;padding:10px 12px 12px;margin:12px 0}
+  .lab{font-size:11.5px;font-weight:800;letter-spacing:.07em;color:var(--faint);margin-bottom:6px;display:flex;justify-content:space-between}
+  .lab span{font-weight:600;letter-spacing:0}
+  .ps5{position:relative;width:100%;aspect-ratio:16/9;background:#20262f;border-radius:8px;overflow:hidden}
+  .ps5 img{width:100%;height:100%;object-fit:cover;display:block}
+  .ps5{touch-action:none}
+  .ps5 .box{position:absolute;border:2px dashed var(--accent);border-radius:3px;background:rgba(255,209,102,.08)}
+  .ps5 .box::after{content:"";position:absolute;inset:-12px}
+  .hint{font-size:12.5px;color:var(--faint);margin-top:6px}
+  .ps5 .empty{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:var(--faint);font-size:13.5px;text-align:center;padding:12px}
+  #cv{width:100%;max-height:110px;object-fit:contain;background:#fff;border-radius:6px;display:none}
+  .en{font-size:16px;color:var(--muted);margin:8px 0 2px;min-height:1.3em}
+  .tr{font-size:21px;font-weight:700;margin:4px 0 0;min-height:1.4em}
+  .meta{font-size:12px;color:var(--faint)}
+  .note{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 14px;margin:12px 0;font-size:14px;color:var(--muted)}
+  .note b{color:var(--text)}
+  video{position:fixed;width:1px;height:1px;opacity:.01;pointer-events:none;bottom:0;right:0}
+  #dark{position:fixed;inset:0;background:#000;z-index:50;display:none;align-items:flex-end;justify-content:center;padding-bottom:40px}
+  #dark video{position:absolute;inset:0;width:100%;height:100%;opacity:1;object-fit:cover}
+  #dark .dim{position:relative;color:#3a3f47;font-size:13px;text-align:center;line-height:1.6}
+  .hold{display:flex;align-items:center;gap:10px;margin:12px 0 4px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:8px 10px}
+  .hold span{flex:1;font-size:14px}.hold b{font-size:18px;min-width:64px;text-align:center}
+  .hold button{width:48px;margin:0;padding:8px 0;font-size:22px}
+  .sel{width:100%;padding:12px;border-radius:10px;background:var(--bg);color:var(--text);border:1px solid var(--line);font:600 15px system-ui,sans-serif;margin:6px 0 2px}
+  .tip{background:rgba(255,209,102,.1);border:1px solid var(--accent);border-radius:10px;padding:10px 12px;margin:4px 0 10px;font-size:13.5px;color:var(--text);line-height:1.5}
+  .tip b{display:block;color:var(--accent);margin-bottom:4px}.tip a{color:var(--accent)}
+  .kl{display:block;font-size:12.5px;color:var(--muted);margin:8px 0 0}
+  .kl a{color:var(--accent)}
+  .kl input{display:block;width:100%;box-sizing:border-box;margin-top:4px;padding:10px;border-radius:8px;border:1px solid var(--line);background:var(--bg);color:var(--text);font:15px system-ui,sans-serif}
+  button.moon{background:#0B0E13;color:var(--accent);border:1px solid var(--line)}
+  details{margin-top:8px;color:var(--faint);font-size:12.5px}
+  pre{white-space:pre-wrap;word-break:break-word;font-size:11.5px;color:var(--faint)}
+</style>
+</head>
+<body>
+<main>
+  <h1>Konsol Çeviri</h1>
+  <div class="status"><span class="dot" id="dot"></span><span id="st">Başlatmak için düğmeye bas</span></div>
+  <div class="detail" id="detail">Telefon, TV ile aynı Wi-Fi'da olmalı.</div>
+  <button id="go">▶ Başlat</button>
+
+  <div class="screen">
+    <div class="lab">EKRAN 1 · PS5'TEN GELEN GÖRÜNTÜ <span id="frameAge"></span></div>
+    <div class="ps5" id="ps5"><div class="empty" id="ps5empty">TV'de "Çeviriyi Başlat"a bastıktan ve PS5 bağlandıktan sonra burada oyunun görüntüsü görünür. Sarı kutu okunan bölgedir.</div></div>
+    <div class="hint" id="hint">Sarı kutu altyazının tamamını içine almalı. Kenarından tutup sürükleyerek büyüt/küçült, ortasından tutup taşı. Bırakınca TV hemen yeni bölgeyi okur.</div>
+  </div>
+
+  <div class="screen">
+    <div class="lab">EKRAN 2 · ALTYAZI <span id="count">0 okuma</span></div>
+    <canvas id="cv"></canvas>
+    <div class="en" id="en">Okunan İngilizce burada görünür.</div>
+    <div class="meta" id="enMeta"></div>
+    <div class="tr" id="tr">—</div>
+    <div class="meta" id="trMeta"></div>
+  </div>
+
+  <div class="screen" id="trCard">
+    <div class="lab">ÇEVİRİCİ</div>
+    <div style="display:flex;gap:8px;align-items:center">
+      <select id="trSel" class="sel" style="flex:1"><option>TV'den liste bekleniyor…</option></select>
+      <button class="alt" id="trNext" style="width:auto;margin:6px 0 2px;padding:12px 14px">Sonraki ▸</button>
+    </div>
+    <button class="alt" id="trTest">Çeviricileri sına (TV'de, ~15 sn)</button>
+    <div class="meta" id="trTestOut" style="white-space:pre-line"></div>
+  </div>
+  <div class="screen" id="keyCard">
+    <div class="lab">ÜCRETSİZ ÇEVİRİ SEÇENEKLERİ</div>
+    <div class="tip" id="aiTip">
+      <b>En iyi çeviri için: ücretsiz Gemini anahtarı (2 dakika, kart istemez)</b>
+      1) <a href="https://aistudio.google.com/apikey" target="_blank">aistudio.google.com/apikey</a> sayfasını aç, Google hesabınla gir.<br>
+      2) "Create API key" (API anahtarı oluştur) düğmesine bas, çıkan anahtarı kopyala.<br>
+      3) Aşağıdaki "Gemini anahtarı" kutusuna yapıştır, "Anahtarları TV'ye kaydet"e bas.<br>
+      Sonra yapay zekâ gecikirse çeviri önce telefonda anında gelir, kısa süre sonra yapay zekânın daha doğal çevirisiyle değişir.
+    </div>
+    <div class="meta" id="bmState">Firefox modeli: hazırlanmadı</div>
+    <button class="alt" id="bmPrep">Firefox modelini şimdi hazırla (internetsiz çeviri)</button>
+    <div class="meta" style="margin:10px 0 6px">İsteğe bağlı: kendi ücretsiz anahtarını girersen o motor da kullanılır. Boş bırakılan alan değişmez; silmek için tek "-" yaz. Anahtarlar yalnız TV'de, şifreli saklanır.</div>
+    <label class="kl">MyMemory e-posta (günlük sınır 5 bin → 50 bin karakter)<input id="k_mm" type="email" autocomplete="off"></label>
+    <label class="kl">Groq anahtarı · <a href="https://console.groq.com/keys" target="_blank">ücretsiz al</a><input id="k_groq" autocomplete="off"></label>
+    <label class="kl">Gemini anahtarı · <a href="https://aistudio.google.com/apikey" target="_blank">ücretsiz al</a><input id="k_gem" autocomplete="off"></label>
+    <label class="kl">DeepL anahtarı · <a href="https://www.deepl.com/pro-api" target="_blank">ücretsiz plan</a><input id="k_deepl" autocomplete="off"></label>
+    <label class="kl">Microsoft Translator anahtarı (Azure, ücretsiz F0)<input id="k_ms" autocomplete="off"></label>
+    <label class="kl">Microsoft bölgesi (ör. westeurope)<input id="k_msr" autocomplete="off"></label>
+    <label class="kl">Google Cloud Translation anahtarı (resmî Google, ücretli ama ucuz) · <a href="https://console.cloud.google.com/apis/library/translate.googleapis.com" target="_blank">aç</a><input id="k_gc" autocomplete="off"></label>
+    <label class="kl">LibreTranslate sunucu adresi<input id="k_lu" autocomplete="off" placeholder="https://..."></label>
+    <label class="kl">LibreTranslate anahtarı (varsa)<input id="k_lk" autocomplete="off"></label>
+    <button class="alt" id="keySave">Kaydet ve sına</button>
+    <div class="meta" id="keyOut"></div>
+  </div>
+  <div class="hold"><span>Çeviri ekranda ek kalma süresi<br><small style="color:var(--muted)">Hızlı geçiyorsa artır; sonrakiler sıraya girer</small></span>
+    <button id="holdMinus">−</button><b id="holdVal">+2,5 sn</b><button id="holdPlus">+</button></div>
+  <button class="moon" id="darkBtn">🌙 Ekranı karart (bağlantı açık kalır)</button>
+  <button class="alt" id="sample">Örnek ile dene (PS5 gerekmez)</button>
+
+  <div class="note">
+    <b>Ekran kilitlenirse bağlantı kesilir.</b> Bir kere ayarla: iPhone › Ayarlar › Ekran ve Parlaklık › Otomatik Kilit › <b>Asla</b>
+    (<b>Düşük Güç Modu kapalı</b> olmalı, açıkken iPhone ekranı 30 sn'de kilitler). Sonra <b>🌙 Ekranı karart</b>'a bas:
+    ekran açık kalır ama siyah görünür, neredeyse pil harcamaz. Telefonu şarja tak.
+    Okuma motoru TV'den yüklenir; çeviriyi telefon internetten yapar (Google, olmazsa MyMemory).
+  </div>
+  <details><summary>Ayrıntılar</summary><pre id="log"></pre></details>
+</main>
+<video id="awake" playsinline muted loop src="/{{TOKEN}}/t/uyanik.mp4"></video>
+<div id="dark"><video id="darkVideo" playsinline loop src="/{{TOKEN}}/t/uyanik.mp4"></video><div class="dim" id="darkInfo">Konsol Çeviri çalışıyor<br>geri dönmek için dokun</div></div>
+
+<script src="/{{TOKEN}}/t/tesseract.min.js"></script>
+<script>
+(function(){
+  const TOKEN = "{{TOKEN}}";
+  const base = location.origin + "/" + TOKEN + "/t";
+  const $ = id => document.getElementById(id);
+  let retry = 0;
+  let ws = null, worker = null, ready = false, busy = false, pending = null, count = 0, started = false, frameAt = 0;
+
+  // ───── yardımcılar ─────
+  function log(s){ const p = $("log"); p.textContent = (new Date().toLocaleTimeString() + "  " + s + "\n" + p.textContent).slice(0, 5000); }
+  function tvlog(s){ log(s); try { if (ws && ws.readyState === 1) ws.send(JSON.stringify({ t: "log", msg: s })); } catch(e) {} }
+  function status(t, c, d){ $("st").textContent = t; $("dot").className = "dot " + (c || ""); if (d !== undefined) $("detail").textContent = d; }
+  function withTimeout(p, ms){ return Promise.race([p, new Promise((_, r) => setTimeout(() => r(new Error("zaman aşımı (" + Math.round(ms/1000) + " sn)")), ms))]); }
+  window.addEventListener("error", e => tvlog("sayfa hatası: " + (e.message || e.type)));
+  window.addEventListener("unhandledrejection", e => tvlog("işlem hatası: " + (e.reason && (e.reason.message || e.reason) || "?")));
+
+  async function keepAwake(){
+    try { if ("wakeLock" in navigator) { await navigator.wakeLock.request("screen"); return; } } catch(e) {}
+    try { await $("awake").play(); } catch(e) {}
+  }
+  document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState === "visible") {
+      if (started) keepAwake();
+      if (!ws || ws.readyState > 1) { retry = 0; connect(); if (started) tvlog("sayfa yeniden öne geldi, TV'ye yeniden bağlanıldı"); }
+    }
+  });
+  setInterval(() => { if (frameAt) $("frameAge").textContent = Math.round((Date.now() - frameAt) / 1000) + " sn önce"; }, 1000);
+
+  // ───── okuma motoru ─────
+  async function fetchFile(name, label){
+    for (let i = 1; i <= 3; i++) {
+      try {
+        const t0 = performance.now();
+        const r = await fetch(base + "/" + name);
+        if (!r.ok) throw new Error("HTTP " + r.status);
+        let got = 0;
+        if (r.body && r.body.getReader) {
+          const rd = r.body.getReader();
+          for (;;) { const { done, value } = await rd.read(); if (done) break; got += value.length; $("detail").textContent = label + ": " + (got/1048576).toFixed(1) + " MB"; }
+        } else got = (await r.arrayBuffer()).byteLength;
+        tvlog(label + " indi (" + (got/1048576).toFixed(1) + " MB, " + Math.round(performance.now() - t0) + " ms)");
+        return;
+      } catch(e) { tvlog(label + " inemedi (deneme " + i + "): " + (e.message || e)); await new Promise(r => setTimeout(r, 1500)); }
+    }
+    throw new Error(label + " TV'den indirilemedi");
+  }
+
+  function simdOk(){
+    try { return WebAssembly.validate(new Uint8Array([0,97,115,109,1,0,0,0,1,5,1,96,0,1,123,3,2,1,0,10,10,1,8,0,65,0,253,15,253,98,11])); } catch(e) { return false; }
+  }
+
+  async function createEngine(attempt){
+    const core = (attempt === 0 && simdOk()) ? "tesseract-core-simd-lstm.wasm.js" : "tesseract-core-lstm.wasm.js";
+    tvlog("motor denemesi " + (attempt + 1) + " (" + core + ") · " + navigator.userAgent.slice(0, 110));
+    await fetchFile(core, "1/2 Okuma motoru");
+    await fetchFile("eng.traineddata", "2/2 İngilizce dil verisi");
+    $("detail").textContent = "Motor başlatılıyor…";
+    const w = await withTimeout(Tesseract.createWorker("eng", 1, {
+      workerPath: base + "/worker.min.js", corePath: base + "/" + core, langPath: base,
+      gzip: false, cacheMethod: "none", workerBlobURL: attempt > 0,
+      logger: m => { if (!ready && m.status) $("detail").textContent = "Motor: " + m.status + (m.progress !== undefined ? " %" + Math.round(m.progress * 100) : ""); },
+      errorHandler: e => tvlog("motor hatası: " + (e && (e.message || e) || "?"))
+    }), 60000);
+    await withTimeout(w.setParameters({ tessedit_pageseg_mode: "6", preserve_interword_spaces: "1", tessedit_char_blacklist: "|{}[]<>~`^\\" }), 15000);
+    return w;
+  }
+
+  async function loadEngine(){
+    status("Okuma motoru yükleniyor…", "y", "İlk açılışta 10-30 sn sürebilir.");
+    const t0 = performance.now(); let err = null;
+    for (let a = 0; a < 2 && !worker; a++) {
+      try { worker = await createEngine(a); } catch(e) { err = e; tvlog("motor denemesi " + (a + 1) + " olmadı: " + (e.message || e)); }
+    }
+    if (!worker) throw err || new Error("motor başlatılamadı");
+    ready = true;
+    tvlog("motor hazır (" + Math.round(performance.now() - t0) + " ms)");
+    status("Hazır · altyazı bekleniyor", "g", "Oyunda altyazı çıktıkça EKRAN 2'de okunur ve çevrilir; çeviri TV'de de görünür.");
+    if (ws && ws.readyState === 1) ws.send(JSON.stringify({ t: "ready", engine: "tesseract" }));
+  }
+
+  async function ocr(canvas){
+    const t0 = performance.now();
+    const r = await worker.recognize(canvas);
+    // Kelime düzeyinde süz: motorun emin olmadığı ya da harf içermeyen kelimeler atılır;
+    // kelimelerinin yarısı atılan satır tamamen atılır.
+    const lines = [];
+    for (const l of (r.data.lines || [])) {
+      const words = l.words || [];
+      const good = words.filter(w => w.confidence >= 50 && /[A-Za-zÀ-ÿ]/.test(w.text));
+      if (!words.length || good.length * 2 < words.length) continue;
+      const text = good.map(w => w.text).join(" ").trim();
+      if (text.replace(/[^A-Za-zÀ-ÿ]/g, "").length < 2) continue;
+      lines.push([text, good.reduce((a, w) => a + w.confidence, 0) / good.length / 100]);
+    }
+    return { lines: lines, ms: Math.round(performance.now() - t0) };
+  }
+
+  // ───── TV bağlantısı ─────
+  function connect(){
+    try { if (ws) ws.close(); } catch(e) {}
+    ws = new WebSocket("ws://" + location.host + "/" + TOKEN + "/ws");
+    ws.binaryType = "arraybuffer";
+    ws.onopen = () => {
+      retry = 0;
+      ws.send(JSON.stringify({ t: "hello", started: started }));
+      if (keysPending) setTimeout(() => { if (ws && ws.readyState === 1 && keysPending) sendKeys(); }, 300);
+      if (ready) { ws.send(JSON.stringify({ t: "ready", engine: "tesseract" })); status("Hazır · altyazı bekleniyor", "g"); }
+      log("TV'ye bağlandı");
+    };
+    ws.onclose = () => {
+      if (ready) status("TV bağlantısı koptu · yeniden deneniyor", "r", "TV'de Konsol Çeviri açık mı, aynı Wi-Fi'da mısınız?");
+      // sayfa öndeyse hemen (giderek artan aralıkla) yeniden bağlan; arka plandaysa öne gelince bağlanılır
+      retry = Math.min(retry + 1, 6);
+      setTimeout(() => { if (document.visibilityState === "visible" && (!ws || ws.readyState > 1)) connect(); }, 400 * retry);
+    };
+    ws.onmessage = ev => {
+      if (typeof ev.data !== "string") { pending = ev.data; if (!busy) next(); return; }
+      let m; try { m = JSON.parse(ev.data); } catch(e) { return; }
+      if (m.t === "frame") showFrame(m);
+      else if (m.t === "translate") doTranslate(m);
+      else if (m.t === "clear") { $("tr").textContent = "—"; $("trMeta").textContent = "altyazı kayboldu"; }
+      else if (m.t === "sub") { $("tr").textContent = m.text; $("trMeta").textContent = (m.upgraded ? "İyileştirildi · " : "TV'de gösterildi · ") + (m.engine || "çeviri"); }
+      else if (m.t === "fix") { $("en").textContent = m.text; $("enMeta").textContent = "okuma düzeltildi: " + m.changes; }
+      else if (m.t === "trr") {
+        if (m.ok) { $("tr").textContent = m.text; $("trMeta").textContent = "örnek · TV çevirdi · " + m.engine + " · " + m.ms + " ms"; }
+        else $("trMeta").textContent = "TV de çeviremedi: " + (m.why || "") + (m.status ? "\n" + m.status : "");
+      }
+      else if (m.t === "trmodes") {
+        trMode = m.cur; webOk = m.web !== false;
+        const items = m.items || (m.list || []).map((t, i) => [i, t]);
+        CYCLE = items.map(x => x[0]);
+        $("trSel").innerHTML = items.map(x => "<option value='" + x[0] + "'" + (x[0] === m.cur ? " selected" : "") + ">" + String(x[1]).replace(/</g, "&lt;") + "</option>").join("");
+      }
+      else if (m.t === "trtest" && m.dest === "keys") {
+        if (m.done) { $("keySave").disabled = false; if (m.none) $("keyOut").textContent += "Henüz anahtar girilmemiş."; }
+        else $("keyOut").textContent += (m.ok ? "✅ " : "❌ ") + m.name + " · " + m.ms + " ms · " + (m.ok ? "\"" + m.text + "\"" : m.why) + "\n";
+      }
+      else if (m.t === "trtest") {
+        if (m.done) { $("trTest").disabled = false; $("trTestOut").textContent += "\nBeğendiğini yukarıdan seç."; }
+        else $("trTestOut").textContent += (m.ok ? "✅ " : "❌ ") + m.name + " · " + m.ms + " ms · " + (m.ok ? "\"" + m.text + "\"" : m.why) + "\n";
+      }
+      else if (m.t === "keys") {
+        const ph = { mm: "k_mm", groq: "k_groq", gem: "k_gem", deepl: "k_deepl", ms: "k_ms", msr: "k_msr", lu: "k_lu", lk: "k_lk", gc: "k_gc" };
+        keysJustSaved = false;
+        $("aiTip").style.display = (m.gem || m.groq || m.deepl || m.ms || m.gc) ? "none" : "block";
+        // yazılmış/yapıştırılmış ama henüz kaydedilmemiş değer silinmez; yalnız kayıttan sonra kutular boşalır
+        for (const k in ph) { const el = $(ph[k]); if (keysJustSaved) el.value = ""; el.placeholder = m[k] ? "kayıtlı: " + m[k] : (k === "lu" ? "https://..." : "boş"); }
+      }
+      else if (m.t === "hold") { holdMs = m.ms; showHold(); }
+      else if (m.t === "status") { if (ready) status(m.msg, m.phase === "STREAMING" ? "g" : m.phase === "ERROR" ? "r" : "y"); }
+    };
+  }
+  $("bmPrep").onclick = () => { bergamot("Ready.", "en", "tr").catch(() => {}); };
+  let keysJustSaved = false, keysPending = false;
+  function sendKeys(){
+    const o = { t: "keys" };
+    [["mm","k_mm"],["groq","k_groq"],["gem","k_gem"],["deepl","k_deepl"],["ms","k_ms"],["msr","k_msr"],["lu","k_lu"],["lk","k_lk"],["gc","k_gc"]].forEach(([k, id]) => { const v = $(id).value.trim(); if (v) o[k] = v; });
+    keysJustSaved = true; keysPending = false;
+    ws.send(JSON.stringify(o));
+    $("keyOut").textContent = "Kaydedildi. Anahtarı girilen çeviriciler sınanıyor…\n";
+    $("keySave").disabled = true;
+    ws.send(JSON.stringify({ t: "trtest", only: "keys" }));
+  }
+  $("keySave").onclick = () => {
+    if (ws && ws.readyState === 1) { sendKeys(); return; }
+    // bağlantı o an yoksa (başka uygulamadan dönülmüş) bekletilir, bağlanınca kendiliğinden gönderilir
+    keysPending = true; $("keyOut").textContent = "TV'ye yeniden bağlanılıyor; bağlanınca anahtarlar kendiliğinden kaydedilecek…";
+    if (!ws || ws.readyState > 1) { retry = 0; connect(); }
+  };
+  let trMode = 0;
+  $("trSel").onchange = () => { trMode = +$("trSel").value; if (ws && ws.readyState === 1) ws.send(JSON.stringify({ t: "trmode", mode: trMode })); };
+  // hızlı geçiş: TV'nin izin verdiği çeviriciler arasında sırayla
+  let CYCLE = [0, 2, 5, 7, 6, 3], webOk = true;
+  $("trNext").onclick = () => {
+    const i = CYCLE.indexOf(trMode); trMode = CYCLE[(i + 1) % CYCLE.length];
+    $("trSel").value = String(trMode);
+    if (ws && ws.readyState === 1) ws.send(JSON.stringify({ t: "trmode", mode: trMode }));
+  };
+  $("trTest").onclick = () => {
+    if (!(ws && ws.readyState === 1)) { $("trTestOut").textContent = "TV'ye bağlanılıyor, birkaç saniye sonra tekrar bas."; connect(); return; }
+    $("trTest").disabled = true; $("trTestOut").textContent = "Örnek: \"I can't believe you did this to me.\"\n";
+    ws.send('{"t":"trtest"}');
+  };
+  let holdMs = 2500;
+  function showHold(){ $("holdVal").textContent = "+" + (holdMs/1000).toFixed(1).replace(".", ",") + " sn"; }
+  function setHold(d){ holdMs = Math.max(0, Math.min(8000, holdMs + d)); showHold();
+    if (ws && ws.readyState === 1) ws.send(JSON.stringify({ t: "hold", ms: holdMs })); }
+  $("holdMinus").onclick = () => setHold(-500);
+  $("holdPlus").onclick = () => setHold(500);
+  // TV "hazırım" mesajını kaçırmış olsa bile yakalasın diye her 3 sn'de yinelenir.
+  setInterval(() => { if (ws && ws.readyState === 1) { ws.send('{"t":"ping"}'); if (ready) ws.send('{"t":"ready","engine":"tesseract"}'); } }, 3000);
+  window.__pc = { get ws() { return ws; } };   // tanılama/test için
+  // Sayfa açılır açılmaz TV'ye bağlan: ayarlar ve anahtarlar "Başlat"a basmadan da kaydedilebilsin.
+  connect();
+
+  // ───── sarı kutuyu parmakla ayarlama ─────
+  let region = null, drag = null;
+  function placeBox(){
+    const b = $("ps5").querySelector(".box"); if (!b || !region) return;
+    b.style.left = region[0]*100 + "%"; b.style.top = region[1]*100 + "%";
+    b.style.width = (region[2]-region[0])*100 + "%"; b.style.height = (region[3]-region[1])*100 + "%";
+  }
+  $("ps5").addEventListener("pointerdown", e => {
+    if (!region) return;
+    const R = $("ps5").getBoundingClientRect();
+    const x = (e.clientX - R.left) / R.width, y = (e.clientY - R.top) / R.height;
+    const tol = 0.07;
+    const near = [Math.abs(x - region[0]), Math.abs(y - region[1]), Math.abs(x - region[2]), Math.abs(y - region[3])];
+    const inside = x > region[0] && x < region[2] && y > region[1] && y < region[3];
+    let edge = -1, best = tol;
+    near.forEach((d, i) => { const along = i % 2 === 0 ? (y > region[1] - tol && y < region[3] + tol) : (x > region[0] - tol && x < region[2] + tol); if (along && d < best) { best = d; edge = i; } });
+    if (edge < 0 && !inside) return;
+    drag = { edge: edge, x: x, y: y, start: region.slice() };
+    $("ps5").setPointerCapture(e.pointerId);
+    e.preventDefault();
+  });
+  $("ps5").addEventListener("pointermove", e => {
+    if (!drag) return;
+    const R = $("ps5").getBoundingClientRect();
+    const x = Math.min(1, Math.max(0, (e.clientX - R.left) / R.width)), y = Math.min(1, Math.max(0, (e.clientY - R.top) / R.height));
+    const r = drag.start.slice();
+    if (drag.edge === 0) r[0] = Math.min(x, r[2] - 0.06);
+    else if (drag.edge === 1) r[1] = Math.min(y, r[3] - 0.05);
+    else if (drag.edge === 2) r[2] = Math.max(x, r[0] + 0.06);
+    else if (drag.edge === 3) r[3] = Math.max(y, r[1] + 0.05);
+    else {
+      const dx = Math.min(1 - r[2], Math.max(-r[0], x - drag.x)), dy = Math.min(1 - r[3], Math.max(-r[1], y - drag.y));
+      r[0] += dx; r[2] += dx; r[1] += dy; r[3] += dy;
+    }
+    region = r; placeBox();
+  });
+  function endDrag(){
+    if (!drag) return;
+    drag = null;
+    if (ws && ws.readyState === 1) ws.send(JSON.stringify({ t: "region", r: region }));
+    $("hint").textContent = "Yeni bölge TV'ye gönderildi: üst %" + Math.round(region[1]*100) + " – alt %" + Math.round(region[3]*100) + ", sol %" + Math.round(region[0]*100) + " – sağ %" + Math.round(region[2]*100) + ".";
+    tvlog("bölge telefondan ayarlandı");
+  }
+  $("ps5").addEventListener("pointerup", endDrag);
+  $("ps5").addEventListener("pointercancel", endDrag);
+
+  function showFrame(m){
+    const box = $("ps5");
+    let img = box.querySelector("img");
+    if (!img) { img = document.createElement("img"); box.prepend(img); $("ps5empty").style.display = "none"; }
+    img.src = "data:image/jpeg;base64," + m.jpg;
+    let b = box.querySelector(".box");
+    if (!b) { b = document.createElement("div"); b.className = "box"; box.appendChild(b); }
+    if (!drag && m.region) { region = m.region.slice(); placeBox(); }
+    frameAt = Date.now();
+  }
+
+  function drawImage(buf){
+    const dv = new DataView(buf);
+    const seq = dv.getInt32(0), w = dv.getInt32(4), h = dv.getInt32(8), packed = dv.getUint8(12) === 1;
+    const src = new Uint8Array(buf, 13);
+    const cv = $("cv"); cv.width = w; cv.height = h; cv.style.display = "block";
+    const ctx = cv.getContext("2d"); const img = ctx.createImageData(w, h); const d = img.data;
+    if (packed) {
+      const rb = (w + 7) >> 3;
+      for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
+        const v = ((src[y*rb + (x>>3)] >> (7 - (x & 7))) & 1) ? 0 : 255, i = (y*w + x) * 4;
+        d[i] = d[i+1] = d[i+2] = v; d[i+3] = 255;
+      }
+    } else for (let i = 0, j = 0; i < w*h; i++, j += 4) { const v = src[i]; d[j] = d[j+1] = d[j+2] = v; d[j+3] = 255; }
+    ctx.putImageData(img, 0, 0);
+    return seq;
+  }
+
+  async function next(){
+    if (!pending || !ready) return;
+    const buf = pending; pending = null; busy = true;
+    try {
+      const seq = drawImage(buf);
+      const r = await ocr($("cv"));
+      count++; $("count").textContent = count + " okuma";
+      $("en").textContent = r.lines.length ? r.lines.map(l => l[0]).join(" ") : "(bu görüntüde yazı yok)";
+      $("enMeta").textContent = "okuma " + r.ms + " ms" + (r.lines.length ? " · güven %" + Math.round(Math.min(...r.lines.map(l => l[1])) * 100) : "");
+      if (ws && ws.readyState === 1) ws.send(JSON.stringify({ t: "ocr", seq: seq, lines: r.lines, ms: r.ms }));
+    } catch(e) { tvlog("okuma hatası: " + e.message); }
+    busy = false;
+    if (pending) next();
+  }
+
+  // ───── çeviri (yalnız telefonda, internetten) ─────
+  const cache = new Map();
+  try { JSON.parse(localStorage.getItem("pc_ceviri") || "[]").forEach(([k, v]) => cache.set(k, v)); } catch(e) {}
+  function saveCache(){ try { localStorage.setItem("pc_ceviri", JSON.stringify([...cache].slice(-400))); } catch(e) {} }
+  const cool = { google: 0, google2: 0, lingva: 0, mymemory: 0, bergamot: 0 };
+  const NAMES = { google: "Google", google2: "Google (2)", lingva: "Lingva", mymemory: "MyMemory", bergamot: "Firefox modeli (telefonda)" };
+
+  // ───── telefonda çevrimdışı çeviri: Mozilla Firefox çeviri modeli (Bergamot, MPL-2.0) ─────
+  // Motor TV'den, model dosyaları (≈15 MB, ilk kullanımda TV indirir) TV'den gelir; çeviri telefonun işlemcisinde yapılır.
+  let bmPromise = null, bmState = "hazırlanmadı";
+  function bmStatus(t){ bmState = t; const el = $("bmState"); if (el) el.textContent = "Firefox modeli: " + t; }
+  async function loadBergamot(){
+    const t0 = performance.now();
+    bmStatus("yükleniyor… (ilk seferde TV modeli indirir, 1-2 dk sürebilir)");
+    const mod = await import(base + "/bergamot.js");
+    const fz = await import(base + "/fzstd.js");
+    const mroot = location.origin + "/" + TOKEN + "/m/";
+    class TvBacking extends mod.TranslatorBacking {
+      async loadModelRegistery(){
+        return [{ from: "en", to: "tr", files: { model: { name: mroot + "model" }, lex: { name: mroot + "lex" }, vocab: { name: mroot + "vocab" } } }];
+      }
+      async fetch(url){
+        let b = null, last = null;
+        for (let i = 0; i < 3 && !b; i++) {
+          try {
+            const r = await fetch(url, { cache: "force-cache" });
+            if (!r.ok) throw new Error("HTTP " + r.status + (r.status === 404 ? " (TV modeli indiremedi, TV'nin interneti var mı?)" : ""));
+            b = new Uint8Array(await r.arrayBuffer());
+          } catch(e) { last = e; await new Promise(z => setTimeout(z, 1500)); }
+        }
+        if (!b) throw last;
+        if (b[0] === 0x28 && b[1] === 0xB5 && b[2] === 0x2F && b[3] === 0xFD) b = fz.decompress(b);   // zstd
+        return b.buffer.slice(b.byteOffset, b.byteOffset + b.byteLength);
+      }
+    }
+    // Not: seçenekler işçiye kopyalanır; içine fonksiyon konmaz (DataCloneError).
+    const backing = new TvBacking({ downloadTimeout: 240000 });
+    let fail; const failed = new Promise((_, rej) => fail = rej);
+    backing.onerror = e => { tvlog("Firefox modeli hata: " + (e && e.message || e)); fail(e instanceof Error ? e : new Error(String(e && e.message || e))); };
+    const tr = new mod.LatencyOptimisedTranslator({ downloadTimeout: 240000 }, backing);
+    tr.worker.catch(e => fail(e));
+    const probe = await Promise.race([withTimeout(tr.translate({ from: "en", to: "tr", text: "Hello, how are you?", html: false }), 240000), failed]);
+    const ms = Math.round(performance.now() - t0);
+    bmStatus("hazır (" + Math.round(ms / 1000) + " sn'de yüklendi)");
+    tvlog("Firefox modeli hazır: \"" + probe.target.text + "\" (" + ms + " ms)");
+    return tr;
+  }
+  window.__bergamot = (t) => bergamot(t, "en", "tr");
+  async function bergamot(text, sl, tl){
+    if ((sl !== "en" && sl !== "auto") || tl !== "tr") throw new Error("yalnız İngilizce→Türkçe");
+    if (!bmPromise) bmPromise = loadBergamot().catch(e => { bmPromise = null; bmStatus("çalışmadı: " + (e.message || e)); throw e; });
+    const tr = await bmPromise;
+    const r = await withTimeout(tr.translate({ from: "en", to: "tr", text: text, html: false }), 15000);
+    return (r.target.text || "").trim();
+  }
+  async function google2(text, sl, tl){
+    const r = await withTimeout(fetch("https://clients5.google.com/translate_a/t?client=dict-chrome-ex&sl=" + sl + "&tl=" + (tl === "zh" ? "zh-CN" : tl) + "&q=" + encodeURIComponent(text)), 5000);
+    if (!r.ok) throw new Error("HTTP " + r.status);
+    const j = await r.json();
+    const f = Array.isArray(j[0]) ? j[0][0] : j[0];
+    return String(f || "").trim();
+  }
+  const LINGVA = ["https://lingva.ml", "https://lingva.lunar.icu", "https://translate.plausibility.cloud"];
+  async function lingva(text, sl, tl){
+    let last = "";
+    for (const h of LINGVA) {
+      try {
+        const r = await withTimeout(fetch(h + "/api/v1/" + sl + "/" + tl + "/" + encodeURIComponent(text)), 5000);
+        if (!r.ok) { last = "HTTP " + r.status; continue; }
+        const t = ((await r.json()).translation || "").trim();
+        if (t) return t;
+      } catch(e) { last = e.message; }
+    }
+    throw new Error(last || "ulaşılamadı");
+  }
+  async function google(text, sl, tl){
+    const r = await withTimeout(fetch("https://translate.googleapis.com/translate_a/single?client=gtx&sl=" + sl + "&tl=" + (tl === "zh" ? "zh-CN" : tl) + "&dt=t&q=" + encodeURIComponent(text)), 5000);
+    if (!r.ok) throw new Error("HTTP " + r.status);
+    const j = await r.json();
+    return (j[0] || []).map(x => x && x[0] || "").join("").trim();
+  }
+  async function mymemory(text, sl, tl){
+    const pair = (sl === "auto" ? "en" : sl) + "|" + (tl === "zh" ? "zh-CN" : tl === "pt" ? "pt-BR" : tl);
+    const r = await withTimeout(fetch("https://api.mymemory.translated.net/get?langpair=" + encodeURIComponent(pair) + "&q=" + encodeURIComponent(text)), 6000);
+    const j = await r.json();
+    if (j.quotaFinished || /MYMEMORY WARNING/.test(JSON.stringify(j))) { cool.mymemory = Date.now() + 6*3600e3; throw new Error("günlük sınır doldu"); }
+    const t = (j.responseData && j.responseData.translatedText || "").trim();
+    if (!t) throw new Error("boş yanıt");
+    return t;
+  }
+  function protect(text, terms){
+    const map = {}; let s = text;
+    (terms || []).forEach((t, i) => {
+      const tok = "Xq" + i + "z";
+      s = s.replace(new RegExp("\\b" + t.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + "\\b", "gi"), m => { map[tok] = m; return tok; });
+    });
+    return [s, out => Object.keys(map).reduce((a, k) => a.split(k).join(map[k]), out)];
+  }
+  let m_mode = null;
+  async function translate(text, sl, tl, terms){
+    const key = tl + "|" + text.toLowerCase();
+    if (cache.has(key)) return { text: cache.get(key), engine: "önbellek" };
+    const [p, restore] = protect(text, terms);
+    let why = "";
+    const mode = typeof m_mode === "number" ? m_mode : trMode;
+    // 0 Otomatik: önce telefonda Firefox modeli (internetsiz); tam sürümde ardından ücretsiz web uçları.
+    // MyMemory ve anahtarlı motorları TV kendisi çağırır.
+    const list = webOk ? { 0: ["bergamot", "google", "google2", "lingva"], 8: ["bergamot"], 2: ["google"], 3: ["mymemory"], 6: ["lingva"], 7: ["google2"] }[mode]
+                       : { 0: ["bergamot"], 8: ["bergamot"], 3: ["mymemory"] }[mode];
+    if (!list) throw new Error("seçili çevirici yalnız TV'de çalışır");
+    for (const e of list) {
+      if (Date.now() < cool[e]) { why += NAMES[e] + " beklemede; "; continue; }
+      try {
+        const fn = { google, google2, lingva, mymemory, bergamot }[e];
+        const out = restore(await fn(p, sl, tl));
+        if (!out) throw new Error("boş");
+        cache.set(key, out); saveCache();
+        return { text: out, engine: NAMES[e] };
+      } catch(err) {
+        why += NAMES[e] + ": " + err.message + "; ";
+        // ağ hatası (Load failed) kısa bekletilir; çok istek (429) uzun
+        if (e !== "mymemory" || cool.mymemory < Date.now()) cool[e] = Date.now() + (/429/.test(err.message) ? 60000 : 3000);
+      }
+    }
+    throw new Error(why);
+  }
+  async function doTranslate(m){
+    const t0 = performance.now();
+    const reply = o => { if (ws && ws.readyState === 1) ws.send(JSON.stringify(Object.assign({ t: "tr", seq: m.seq, ms: Math.round(performance.now() - t0) }, o))); };
+    try {
+      m_mode = typeof m.mode === "number" ? m.mode : null;
+      const r = await translate(m.text, m.src, m.target, m.terms);
+      $("tr").textContent = r.text;
+      $("trMeta").textContent = "çeviri " + r.engine + " · " + Math.round(performance.now() - t0) + " ms · TV'ye gönderildi";
+      reply({ ok: true, text: r.text, engine: r.engine });
+    } catch(e) {
+      $("trMeta").textContent = "Telefon çeviremedi (TV kendi çevirisini dener): " + e.message;
+      tvlog("çeviri olmadı: " + e.message);
+      reply({ ok: false, why: String(e.message).slice(0, 160) });
+    }
+  }
+
+  // ───── örnek ile dene ─────
+  async function sample(){
+    if (!ready) { await start(); if (!ready) return; }
+    const cv = $("cv"); cv.width = 1200; cv.height = 110; cv.style.display = "block";
+    const c = cv.getContext("2d");
+    c.fillStyle = "#fff"; c.fillRect(0, 0, 1200, 110);
+    c.fillStyle = "#000"; c.font = "bold 46px Helvetica, Arial, sans-serif"; c.textAlign = "center"; c.textBaseline = "middle";
+    c.fillText("I can't believe you did this to me.", 600, 56);
+    $("en").textContent = "okunuyor…"; $("tr").textContent = "…";
+    const r = await ocr(cv);
+    const text = r.lines.map(l => l[0]).join(" ");
+    $("en").textContent = text || "(okunamadı)";
+    $("enMeta").textContent = "örnek · okuma " + r.ms + " ms";
+    tvlog("örnek okuma: \"" + text + "\" (" + r.ms + " ms)");
+    if (!text) return;
+    const t0 = performance.now();
+    try {
+      const t = await translate(text, "en", "tr", []);
+      $("tr").textContent = t.text;
+      $("trMeta").textContent = "örnek · çeviri " + t.engine + " · " + Math.round(performance.now() - t0) + " ms";
+      tvlog("örnek çeviri: \"" + t.text + "\" (" + t.engine + ")");
+    } catch(e) {
+      $("trMeta").textContent = "Telefon çeviremedi (" + e.message + ") · TV deneniyor…"; tvlog("örnek çeviri telefonda olmadı: " + e.message);
+      if (ws && ws.readyState === 1) ws.send(JSON.stringify({ t: "trq", text: text }));
+    }
+  }
+
+  async function start(){
+    if (started) return;
+    started = true;
+    $("go").textContent = "● Çalışıyor"; $("go").disabled = true;
+    keepAwake();
+    if (!ws || ws.readyState > 1) connect();
+    try { await loadEngine(); }
+    catch(e) {
+      status("Okuma motoru başlatılamadı", "r", (e.message || e) + "\nTanılama TV'ye gönderildi. Sayfayı yenileyip tekrar dene.");
+      tvlog("MOTOR BAŞLAMADI: " + (e.message || e));
+      $("go").disabled = false; $("go").textContent = "▶ Tekrar dene"; started = false;
+    }
+  }
+  // ───── ekranı karart: ekran açık kalır ama siyah görünür ─────
+  async function darkOn(){
+    if (!started) start();
+    $("dark").style.display = "flex";
+    const v = $("darkVideo");
+    try { v.muted = false; v.volume = 0; await v.play(); }
+    catch(e) { try { v.muted = true; await v.play(); } catch(e2) {} }
+    keepAwake();
+    try { if (document.documentElement.requestFullscreen) await document.documentElement.requestFullscreen(); } catch(e) {}
+    tvlog("ekran karartıldı");
+  }
+  function darkOff(){
+    $("dark").style.display = "none";
+    try { $("darkVideo").pause(); } catch(e) {}
+    try { if (document.fullscreenElement) document.exitFullscreen(); } catch(e) {}
+  }
+  setInterval(() => {
+    if ($("dark").style.display === "flex")
+      $("darkInfo").innerHTML = (ws && ws.readyState === 1 ? "Konsol Çeviri çalışıyor" : "TV'ye yeniden bağlanıyor…") + " · " + count + " okuma<br>geri dönmek için dokun";
+  }, 2000);
+  $("darkBtn").onclick = darkOn;
+  $("dark").onclick = darkOff;
+  $("go").onclick = start;
+  $("sample").onclick = sample;
+  if (typeof Tesseract === "undefined") status("Sayfa eksik yüklendi · yenile", "r");
+})();
+</script>
+</body>
+</html>

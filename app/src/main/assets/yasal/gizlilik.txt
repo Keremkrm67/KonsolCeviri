@@ -1,0 +1,58 @@
+Konsol Çeviri Gizlilik Politikası
+
+Yürürlük tarihi: 8 Kasım 2026
+
+Konsol Çeviri ("uygulama"), PS5 oyunlarındaki İngilizce altyazıları okuyup Türkçeye çevirerek Android TV ekranında gösteren, açık kaynak bir yardımcı uygulamadır. Uygulamayı Sait Kerem Kınay geliştirir ve yayınlar ("biz"). Bu politika, uygulamanın hangi bilgileri nasıl işlediğini açıklar.
+
+Kısaca
+
+- Hesap açmanız istenmez. Bizim bir sunucumuz yoktur; bilgileriniz bize gönderilmez.
+- Oyun görüntüsü yalnız evinizdeki ağda, TV ile kendi telefonunuz arasında dolaşır ve kaydedilmez.
+- Çeviri varsayılan olarak telefonunuzda, internetsiz yapılabilir; çevrimiçi bir hizmet seçerseniz yalnız altyazı metni o hizmete gönderilir.
+- Reklam, analiz ya da izleme aracı yoktur.
+
+İşlenen bilgiler
+
+1. PlayStation Network (PSN) hesap bilgisi. PS5'e uzaktan oynatma ile bağlanabilmek için, PSN hesabınızla Sony'nin kendi giriş sayfasında oturum açarsınız. Şifreniz uygulamaya geçmez. Giriş sonunda Sony'den alınan hesap kimliği (Account ID), PS5 eşleştirme anahtarları ve gerekirse çevrimiçi adınız yalnız TV'nizde, uygulamanın kendi depolama alanında saklanır. Bu bilgiler yalnız Sony'nin sunucularına ve kendi PS5'inize, bağlantı kurmak için gönderilir.
+
+2. Oyun görüntüsü. Uygulama PS5'ten gelen görüntünün yalnız sizin seçtiğiniz altyazı bölgesini işler. Bu bölgenin görüntüsü ve küçük bir ön izleme, aynı Wi-Fi ağındaki kendi telefonunuzun tarayıcısına gönderilir; yazı orada okunur. Görüntüler kalıcı olarak saklanmaz, internete gönderilmez.
+
+3. Altyazı metni ve çeviri. Okunan İngilizce altyazı metni şu yollardan biriyle çevrilir:
+- Telefonda (internetsiz): Mozilla'nın Firefox çeviri modeli telefonunuzun tarayıcısında çalışır; metin hiçbir sunucuya gitmez. Model dosyaları (yaklaşık 15 MB) ilk kullanımda TV tarafından Hugging Face ya da Mozilla sunucularından indirilir; bu indirmede sizinle ilgili bilgi gönderilmez.
+- Çevrimiçi hizmetler: MyMemory (Translated srl) ve yalnız kendi anahtarınızı girdiğinizde Groq, Google Gemini, Google Cloud Translation, DeepL, Microsoft Translator ya da adresini girdiğiniz LibreTranslate sunucusu. Metin bu hizmete HTTPS ile gönderilir ve hizmet onu kendi gizlilik politikasına göre işler. MyMemory gönderilen metinleri kalıcı olarak saklar.
+- TV'de cihaz içi: Google ML Kit; metin cihazdan çıkmaz.
+
+Altyazı metni dışında kişisel bilgi gönderilmez; tek istisna, MyMemory alanına e-posta adresinizi girerseniz bu adresin günlük sınırı artırmak için MyMemory'ye iletilmesidir. Girdiğiniz anahtarlar ve e-posta yalnız TV'de, Android Keystore ile şifrelenmiş olarak saklanır. Tekrarlanan cümleler hızlı gelsin diye son çeviriler TV'de saklanır (en çok 4000 kayıt).
+
+4. Ayarlar ve tanılama kaydı. Yazı rengi, konum, okuma bölgesi gibi ayarlar ve sorun gidermek için tutulan tanılama kaydı yalnız TV'de saklanır. Tanılama kaydı yalnız siz "Tanılama kaydı (paylaşılabilir)" düğmesiyle kendiniz paylaşırsanız cihazdan çıkar.
+
+5. Ağ bilgisi. PS5'i ve telefonunuzu bulmak için yerel ağ adresleri kullanılır. Ad çözümlemesi için Cloudflare (1.1.1.1) ve Google (8.8.8.8) DNS hizmetlerine sorgu gönderilebilir.
+
+Paylaşım
+
+Bilgileriniz satılmaz, reklam için kullanılmaz. Yukarıda sayılan hizmetler (Sony, seçtiğiniz çeviri hizmeti, model indirme sunucusu, DNS hizmeti) dışında hiçbir üçüncü tarafla paylaşılmaz. Yasal bir zorunluluk olursa elimizde zaten bilgi bulunmaz; çünkü bilgiler yalnız sizin cihazınızdadır.
+
+Saklama ve silme
+
+Tüm bilgiler TV'nizde tutulur. Uygulamadaki "PSN hesabını sil" düğmesiyle hesap bilgilerini, Android ayarlarından "Verileri temizle" ya da uygulamayı kaldırarak tüm bilgileri silebilirsiniz.
+
+Güvenlik
+
+İnternete giden tüm bağlantılar HTTPS ile şifrelenir. TV ile telefon arasındaki bağlantı yalnız yerel ağda çalışır ve her TV'ye özel, tahmin edilemeyen bir bağlantı anahtarı ister.
+
+Çocuklar
+
+Uygulama 13 yaşından küçük çocuklara yönelik değildir ve onlardan bilerek bilgi toplamaz.
+
+Haklarınız
+
+KVKK ve GDPR kapsamındaki erişim, düzeltme ve silme haklarınızı, bilgiler yalnız cihazınızda olduğu için doğrudan uygulamadan kullanabilirsiniz. Sorularınız için aşağıdaki adrese yazabilirsiniz.
+
+Değişiklikler
+
+Bu politika değişirse yeni sürüm bu sayfada, yürürlük tarihiyle yayınlanır.
+
+İletişim
+
+Sait Kerem Kınay · skeremkinay@gmail.com
+Kaynak kod: https://github.com/Keremkrm67/KonsolCeviri

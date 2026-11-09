@@ -1,0 +1,45 @@
+Konsol Çeviri Kullanım Koşulları
+
+Yürürlük tarihi: 8 Kasım 2026
+
+Uygulamayı kurarak ya da kullanarak bu koşulları kabul etmiş olursunuz.
+
+1. Uygulama nedir
+
+Konsol Çeviri, PS5'teki oyunların İngilizce altyazılarını okuyup çeviren ve TV ekranında gösteren bir yardımcı araçtır. Oyun oynamaz, oyunları değiştirmez, oyun dosyalarına erişmez.
+
+2. Sony ile bağlantı yoktur
+
+Uygulama resmî değildir. Sony Interactive Entertainment ya da herhangi bir oyun yayıncısı tarafından yapılmamış, onaylanmamış, desteklenmemektedir. "PlayStation", "PS5" ve "PSN" Sony Interactive Entertainment Inc.'in markalarıdır ve yalnız uyumluluğu belirtmek için anılır.
+
+3. PSN hesabınız
+
+Uygulama PS5'e, Sony'nin uzaktan oynatma özelliğiyle bağlanır ve bunun için bir PSN hesabıyla oturum açılmasını ister. Resmî olmayan bir istemci kullanmak Sony'nin hizmet koşullarıyla çelişebilir. Uygulamayı kullanırken hesabınızla ilgili riski kabul edersiniz. Ayrı, ikinci bir PSN hesabı kullanmanızı öneririz.
+
+4. Çeviriler
+
+Çeviriler otomatik makine çevirisidir; yanlış, eksik ya da gecikmeli olabilir. Çeviri hizmetleri üçüncü taraflarca sağlanır; günlük sınırları olabilir, değişebilir ya da durdurulabilir. Çevirilere dayanarak verilen kararlardan sorumluluk kabul edilmez.
+
+5. Lisans
+
+Uygulama açık kaynaklıdır ve GNU Affero Genel Kamu Lisansı sürüm 3 (AGPL-3.0) ile dağıtılır. Kaynak kodu https://github.com/Keremkrm67/KonsolCeviri adresindedir. Uygulamada kullanılan üçüncü taraf bileşenler kendi lisanslarına tabidir (uygulama içinde "Açık kaynak lisansları").
+
+6. Uygun kullanım
+
+Uygulamayı yalnız kendi cihazlarınız ve kendi hesaplarınızla, kişisel kullanım için kullanabilirsiniz. Başkalarının PS5'ine ya da hesabına izinsiz bağlanmak yasaktır.
+
+7. Garanti yoktur
+
+Uygulama "olduğu gibi" sunulur. Kesintisiz ya da hatasız çalışacağı garanti edilmez. Yürürlükteki hukukun izin verdiği ölçüde, kullanımdan doğan zararlardan sorumluluk kabul edilmez.
+
+8. Değişiklikler
+
+Bu koşullar değişebilir; yeni sürüm bu sayfada yayınlanır. Değişiklikten sonra kullanmaya devam etmeniz yeni koşulları kabul ettiğiniz anlamına gelir.
+
+9. Uygulanacak hukuk
+
+Bu koşullar Türkiye Cumhuriyeti hukukuna tabidir.
+
+10. İletişim
+
+Sait Kerem Kınay · skeremkinay@gmail.com

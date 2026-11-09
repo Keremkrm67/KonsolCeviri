@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Yalnız TV uygulaması (Google Play TV sürümü) -->
+    <uses-feature android:name="android.software.leanback" android:required="true" />
+    <uses-feature android:name="android.hardware.touchscreen" android:required="false" />
+    <uses-feature android:name="android.hardware.wifi" android:required="false" />
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+
+    <application
+        android:name=".PlayCeviriApp"
+        android:allowBackup="false"
+        android:banner="@drawable/banner"
+        android:extractNativeLibs="true"
+        android:icon="@drawable/ic_playceviri"
+        android:label="Konsol Çeviri"
+        android:theme="@android:style/Theme.Material.NoActionBar"
+        android:usesCleartextTraffic="true">
+
+        <activity
+            android:name=".ui.MainActivity"
+            android:screenOrientation="landscape"
+            android:configChanges="screenSize|orientation|keyboardHidden|keyboard|screenLayout|smallestScreenSize"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LEANBACK_LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".ui.LoginActivity"
+            android:configChanges="screenSize|orientation|keyboardHidden|keyboard"
+            android:exported="false" />
+
+        <activity
+            android:name=".ui.RegionActivity"
+            android:configChanges="screenSize|orientation|keyboardHidden|keyboard"
+            android:exported="false" />
+
+        <activity
+            android:name=".ui.GuideActivity"
+            android:configChanges="screenSize|orientation|keyboardHidden|keyboard"
+            android:exported="false" />
+
+        <activity
+            android:name=".ui.StyleActivity"
+            android:configChanges="screenSize|orientation|keyboardHidden|keyboard"
+            android:exported="false" />
+
+        <service
+            android:name=".worker.WorkerService"
+            android:exported="false"
+            android:process=":isci" />
+
+        <service
+            android:name=".service.PlayCeviriService"
+            android:exported="false"
+            android:foregroundServiceType="specialUse">
+            <property
+                android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
+                android:value="PS5 goruntusundeki altyaziyi okuyup cevirir" />
+        </service>
+
+        <service
+            android:name=".display.DisplayService"
+            android:exported="false"
+            android:foregroundServiceType="specialUse">
+            <property
+                android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
+                android:value="Telefondan gelen ceviriyi TV ekraninda gosterir" />
+        </service>
+    </application>
+</manifest>
